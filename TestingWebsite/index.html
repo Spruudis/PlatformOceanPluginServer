@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Platform Ocean</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            /*padding-bottom: 3rem;*/
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        #header{
+            height: 5.5vh;
+            /*padding: 5.5vh;*/
+            position: fixed;
+            display: flex;
+            width: 100%;
+            background: #a9a9a9;
+            overflow: auto;
+            top: 0;
+        }
+
+        #content {
+            margin-top: 5.5vh;
+            background: azure;
+            height: 74.5vh;
+            overflow: hidden;
+        }
+
+        #controls{
+            height: 20vh;
+            position: fixed;
+            display: flex;
+            width: 100%;
+            padding: 0px;
+            background: #a9a9a9;
+            overflow: auto;
+            bottom: 0;
+        }
+        #left{
+            float: left;
+            width: 50%;
+            background: #f8dfdf;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            /*padding: 0.5em;*/
+        }
+        #right{
+            float: left;
+            width: 50%;
+            background: #e8e8f8;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            /*padding: 0.5em;*/
+        }
+
+        #leftBottom{
+            float: left;
+            width: 50%;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        #rightBottom{
+            float: right;
+            width: 50%;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        /*---------Left side-------------*/
+        #leftMessages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0 0 0;}
+        #leftMessages > li {padding: 0.5rem 1rem; }
+        #leftMessages > li:nth-child(odd) { background: #efefef; }
+
+        #inputDivision{
+            height: 30%;
+        }
+
+        #chatForm {
+            padding: 0.25rem;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        #chatInput { border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem; }
+        #chatInput:focus { outline: none; }
+
+        #chatForm > button {
+            background: #384962;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+        #timerForm {
+            padding: 0.25rem;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+        #timerInput {
+            border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem;
+        }
+        #timerInput:focus { outline: none; }
+        #timerForm > button {
+            background: #384962;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #ffffff;
+        }
+
+
+        /*---------Right side-------------*/
+        #rightMessages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0 0 0;}
+        #rightMessages > li {padding: 0.5rem 1rem; }
+        #rightMessages > li:nth-child(odd) { background: #efefef; }
+
+        #inputDivision2{
+            height: 30%;
+        }
+
+        #chatForm2 {
+            padding: 0.25rem;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        #chatInput2 { border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem; }
+        #chatInput2:focus { outline: none; }
+
+        #chatForm2 > button {
+            background: #384962;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+        #timerForm2 {
+            padding: 0.25rem;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+        #timerInput2 {
+            border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem;
+        }
+        #timerInput2:focus { outline: none; }
+        #timerForm2 > button {
+            background: #384962;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #ffffff;
+        }
+
+
+        #nameForm {
+            padding: 0.25rem;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        #nameInput { border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem; }
+        #nameInput:focus { outline: none; }
+
+        #nameForm > button {
+            background: #384962;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+
+        .message__author{
+            font-weight: bold;
+            color: #7c7c7c;
+        }
+
+        .message__roles{
+            color: darkgrey;
+        }
+
+        .message__info{
+            padding: 0;
+        }
+
+        .received__message{
+            padding: 0;
+        }
+        .time_date{
+            font-weight: lighter;
+            color: darkgrey;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <form id="nameForm" action="">
+       <input id="nameInput" autocomplete="off" /><button>Login</button>
+    </form>
+</div>
+
+<div id="content">
+
+    <div id="left">
+        <ul id="leftMessages"></ul>
+    </div>
+
+    <div id="right">
+        <ul id="rightMessages"></ul>
+    </div>
+
+</div>
+
+<div id = "controls">
+    <div id = leftBottom>
+
+        <form id="timerForm" action="">
+            <input id="timerInput" autocomplete="off" name="quantity" /><button>Advance Citizen's Assembly to the next stage</button>
+        </form>
+
+        <form id="chatForm" action="">
+            <input id="chatInput" autocomplete="off" /><button>Send message</button>
+        </form>
+    </div>
+
+    <div id = rightBottom>
+        <form id="timerForm2" action="">
+            <input id="timerInput2" autocomplete="off" type="number" name="quantity" min="1" max="5"/><button>Set Timer Frequency</button>
+        </form>
+
+        <form id="chatForm2" action="">
+            <input id="chatInput2" autocomplete="off" /><button>Send message</button>
+        </form>
+    </div>
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io("https://fast-owl-58.loca.lt/");
+    const socket2 = io("ws://localhost:2998");
+
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const timerForm = document.getElementById('timerForm');
+    const timerInput = document.getElementById('timerInput');
+    const nameForm = document.getElementById('nameForm');
+    const nameInput = document.getElementById('nameInput');
+
+    const messages = document.getElementById('leftMessages');
+    const messages2 = document.getElementById('rightMessages');
+
+    const leftWindow = document.getElementById('left');
+    const rightWindow = document.getElementById('right');
+
+    function debugMessage(msg, colour){
+        const item = document.createElement('li');
+        item.textContent = msg;
+        item.style.color = colour;
+        messages2.appendChild(item);
+        rightWindow.scrollTop = rightWindow.scrollHeight;
+    }
+
+
+    //-------------Input-----------------
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const prefix = "/"
+
+        if (chatInput.value) {
+            if(!chatInput.value.startsWith(prefix)){
+                socket.emit('message', chatInput.value);
+
+                //TODO: temporary
+                socket2.emit('chat message', chatInput.value);
+            } else{
+                const input = chatInput.value.slice(prefix.length).trim();
+
+                const regex = /[<](.*?)[>]/g;
+                const found = input.match(regex);
+
+                let args = found.map(element => element.slice(1,-1))
+
+                const command = args.shift();
+
+                debugMessage("Sending command " + command + " with message: " + JSON.stringify(args), "#f8334c");
+
+                socket.emit(command, args);
+            }
+
+            chatInput.value = '';
+        }
+    });
+
+    timerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (timerInput.value) {
+            timerInput.value = '';
+        }
+        socket.emit('Advance CA Stage');
+    });
+
+    nameForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (nameInput.value) {
+            socket.emit('User Login', [nameInput.value]);
+            nameInput.value = '';
+        }
+    });
+
+    //-------------Socket listeners-----------------
+
+    socket2.on('chat message', function(msg) {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        item.style.color = "#000000";
+        messages2.appendChild(item);
+        window.scrollTop = window.scrollHeight;
+    });
+
+    socket.on('chat message', function(msg) {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        item.style.color = "#000000";
+        item.style.fontWeight = 'bold';
+        messages.appendChild(item);
+        leftWindow.scrollTop = leftWindow.scrollHeight;
+    });
+
+    const addNewMessage = ({ user, message, roles }) => {
+        const time = new Date();
+        const formattedTime = time.toLocaleString("en-US", { hour: "numeric", minute: "numeric" });
+
+        const receivedMsg = `
+        <li>
+          <div class="incoming__message">
+            <div class="received__message">
+                <div class="message__info">
+                <span class="message__author">${user}</span>
+                <span class="message__roles">${JSON.stringify(roles)}</span>
+                <span class="time_date">${formattedTime}</span>
+              </div>
+              <p>${message}</p>
+            </div>
+          </div>
+        </li>`;
+
+        messages.innerHTML +=  receivedMsg;
+    };
+
+
+    socket.on('message', function(msg) {
+        addNewMessage({ user: msg.userID, message: msg.message, roles: msg.roles });
+        leftWindow.scrollTop = leftWindow.scrollHeight;
+    });
+
+    socket.on('debug message', function(msg) {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        item.style.color = "#f8334c";
+        messages2.appendChild(item);
+        rightWindow.scrollTo(0, document.body.scrollHeight);
+        rightWindow.scrollTop = rightWindow.scrollHeight;
+    });
+
+    socket2.on('debug message', function(msg) {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        item.style.color = "#3364f8";
+        messages2.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+node_modules/**/*
+logs/*
+
+# macOS
+.DS_Store
+testing.js
+experiment.js
