@@ -197,7 +197,6 @@
             color: #ffffff;
         }
 
-
         #nameForm {
             padding: 0.25rem;
             display: flex;
@@ -222,7 +221,6 @@
             outline: none;
             color: #fff;
         }
-
 
         .message__author{
             font-weight: bold;
@@ -295,7 +293,7 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    const socket = io("https://fast-owl-58.loca.lt/");
+    const socket = io("ws://localhost:3000");
     const socket2 = io("ws://localhost:2998");
 
     const chatForm = document.getElementById('chatForm');
