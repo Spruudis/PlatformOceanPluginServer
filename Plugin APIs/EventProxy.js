@@ -53,14 +53,6 @@ class EventProxyResponder{
         return this.#socket.id;
     }
 
-    //Emits a message to all clients in the specified rooms except the sender.
-    //Each client receives the message once.
-    respondRoomsExceptSender(rooms){
-        //TODO: implement
-        // "to all clients in room1 and/or room2 except the sender
-        // --- socket.to("room1").to("room2").emit(/* ... */);"
-    }
-
 }
 
 
@@ -118,42 +110,6 @@ class _EventProxy {
             },
         }
     }
-
-    /**
-     * Adds a callback for an event to a subscriber list
-     * @param {string} eventName - Name of the event
-     * @param {function(*): void} callback - Callback to be executed on event
-     * @return Method to unsubscribe
-     */
-    // subscribeAll(eventName, callback){
-    //     if (!Array.isArray(this.#subscribers[eventName])) {
-    //         this.#subscribers[eventName] = []
-    //     }
-    //     this.#subscribers[eventName].push(callback)
-    //
-    //     const index = this.#subscribers[eventName].length - 1
-    //     let unsubscribed = false;
-    //
-    //     //register event to network layer (if it is not). Do not register to network layer while server has not started.
-    //     if(this.connectionOpen){
-    //         this.#io.on('connection', (socket) => {
-    //             if(!(ev in socket.eventNames())){
-    //                 socket.on(eventName, (msg) =>{
-    //                     console.log("--Client publishing ", eventName, " to EventProxy--");
-    //                     this.publishFromClient(eventName, msg, socket)
-    //                 });
-    //             }
-    //         });
-    //     }
-    //
-    //     return {
-    //         unsubscribe() {
-    //             if(!unsubscribed){
-    //                 this.#subscribers[eventName].splice(index, 1)
-    //             }
-    //         },
-    //     }
-    // }
 
     /**
      * @return Events and their subscribed callbacks

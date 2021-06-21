@@ -646,7 +646,7 @@ class CitizensAssembly extends BasePlugIn{
                             .then(result => {
                                 eventProxyResponder.respondToSender(
                                     'debug message',
-                                    "Coordinator" +
+                                    "Coordinator " +
                                     eventProxyResponder.eventMessage[0] +
                                     " appointed successfully"
                                 );
@@ -676,7 +676,7 @@ class CitizensAssembly extends BasePlugIn{
                                 );
                                 eventProxyResponder.respondToSender(
                                     'debug message',
-                                    "Advisor" +
+                                    "Advisor " +
                                     eventProxyResponder.eventMessage[0] +
                                     " appointed successfully"
                                 );

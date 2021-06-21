@@ -24,12 +24,12 @@
         #content {
             margin-top: 5.5vh;
             background: azure;
-            height: 74.5vh;
+            height: 83.5vh;
             overflow: hidden;
         }
 
         #controls{
-            height: 20vh;
+            height: 11vh;
             position: fixed;
             display: flex;
             width: 100%;
@@ -116,15 +116,8 @@
             box-sizing: border-box;
             backdrop-filter: blur(10px);
         }
-        #timerInput {
-            border: none;
-            padding: 0 1rem;
-            flex-grow: 1;
-            border-radius: 2rem;
-            margin: 0.25rem;
-        }
-        #timerInput:focus { outline: none; }
-        #timerForm > button {
+
+        #advanceButton {
             background: #384962;
             border: none;
             padding: 0 1rem;
@@ -270,9 +263,9 @@
 <div id = "controls">
     <div id = leftBottom>
 
-        <form id="timerForm" action="">
-            <input id="timerInput" autocomplete="off" name="quantity" /><button>Advance Citizen's Assembly to the next stage</button>
-        </form>
+        <div id="timerForm" action="">
+            <button id = "advanceButton">Advance Citizen's Assembly to the next stage</button>
+        </div>
 
         <form id="chatForm" action="">
             <input id="chatInput" autocomplete="off" /><button>Send message</button>
@@ -280,10 +273,6 @@
     </div>
 
     <div id = rightBottom>
-        <form id="timerForm2" action="">
-            <input id="timerInput2" autocomplete="off" type="number" name="quantity" min="1" max="5"/><button>Set Timer Frequency</button>
-        </form>
-
         <form id="chatForm2" action="">
             <input id="chatInput2" autocomplete="off" /><button>Send message</button>
         </form>
@@ -298,8 +287,12 @@
 
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
-    const timerForm = document.getElementById('timerForm');
-    const timerInput = document.getElementById('timerInput');
+
+    const chatForm2 = document.getElementById('chatForm2');
+    const chatInput2 = document.getElementById('chatInput2');
+
+    const CA_Advance = document.getElementById('advanceButton');
+
     const nameForm = document.getElementById('nameForm');
     const nameInput = document.getElementById('nameInput');
 
@@ -309,26 +302,21 @@
     const leftWindow = document.getElementById('left');
     const rightWindow = document.getElementById('right');
 
-    function debugMessage(msg, colour){
+    function debugMessage(msg, colour, mssgs){
         const item = document.createElement('li');
         item.textContent = msg;
         item.style.color = colour;
-        messages2.appendChild(item);
+        mssgs.appendChild(item);
         rightWindow.scrollTop = rightWindow.scrollHeight;
     }
 
-
-    //-------------Input-----------------
-    chatForm.addEventListener('submit', function(e) {
+    function processChat(outSocket, chatInput, e, messages){
         e.preventDefault();
         const prefix = "/"
 
         if (chatInput.value) {
             if(!chatInput.value.startsWith(prefix)){
-                socket.emit('message', chatInput.value);
-
-                //TODO: temporary
-                socket2.emit('chat message', chatInput.value);
+                outSocket.emit('message', chatInput.value);
             } else{
                 const input = chatInput.value.slice(prefix.length).trim();
 
@@ -339,20 +327,27 @@
 
                 const command = args.shift();
 
-                debugMessage("Sending command " + command + " with message: " + JSON.stringify(args), "#f8334c");
+                debugMessage("Sending command " + command + " with message: " + JSON.stringify(args), "#f8334c", messages);
 
-                socket.emit(command, args);
+                outSocket.emit(command, args);
             }
 
             chatInput.value = '';
         }
+    }
+
+
+    //-------------Input-----------------
+    chatForm.addEventListener('submit', function(e) {
+        processChat(socket, chatInput, e, messages);
     });
 
-    timerForm.addEventListener('submit', function(e) {
+    chatForm2.addEventListener('submit', function(e) {
+        processChat(socket2, chatInput2, e, messages2);
+    });
+
+    CA_Advance.addEventListener("click", function(e) {
         e.preventDefault();
-        if (timerInput.value) {
-            timerInput.value = '';
-        }
         socket.emit('Advance CA Stage');
     });
 
@@ -364,26 +359,12 @@
         }
     });
 
+
+
     //-------------Socket listeners-----------------
 
-    socket2.on('chat message', function(msg) {
-        const item = document.createElement('li');
-        item.textContent = msg;
-        item.style.color = "#000000";
-        messages2.appendChild(item);
-        window.scrollTop = window.scrollHeight;
-    });
 
-    socket.on('chat message', function(msg) {
-        const item = document.createElement('li');
-        item.textContent = msg;
-        item.style.color = "#000000";
-        item.style.fontWeight = 'bold';
-        messages.appendChild(item);
-        leftWindow.scrollTop = leftWindow.scrollHeight;
-    });
-
-    const addNewMessage = ({ user, message, roles }) => {
+    const addNewMessage = ({ user, message, roles }, list) => {
         const time = new Date();
         const formattedTime = time.toLocaleString("en-US", { hour: "numeric", minute: "numeric" });
 
@@ -401,30 +382,45 @@
           </div>
         </li>`;
 
-        messages.innerHTML +=  receivedMsg;
+        list.innerHTML +=  receivedMsg;
     };
 
 
     socket.on('message', function(msg) {
-        addNewMessage({ user: msg.userID, message: msg.message, roles: msg.roles });
+        addNewMessage({ user: msg.userID, message: msg.message, roles: msg.roles }, messages);
         leftWindow.scrollTop = leftWindow.scrollHeight;
     });
+
+    socket.on('chat message', function(msg) {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        item.style.color = "#000000";
+        item.style.fontWeight = 'bold';
+        messages.appendChild(item);
+        leftWindow.scrollTop = leftWindow.scrollHeight;
+    });
+
+    socket2.on('message', function(msg) {
+        addNewMessage({ user: "", message: msg, roles: [] }, messages2);
+        rightWindow.scrollTop = rightWindow.scrollHeight;
+    });
+
 
     socket.on('debug message', function(msg) {
         const item = document.createElement('li');
         item.textContent = msg;
-        item.style.color = "#f8334c";
-        messages2.appendChild(item);
-        rightWindow.scrollTo(0, document.body.scrollHeight);
-        rightWindow.scrollTop = rightWindow.scrollHeight;
+        item.style.color = "#8f8989";
+        messages.appendChild(item);
+        leftWindow.scrollTo(0, document.body.scrollHeight);
+        leftWindow.scrollTop = leftWindow.scrollHeight;
     });
 
     socket2.on('debug message', function(msg) {
         const item = document.createElement('li');
         item.textContent = msg;
-        item.style.color = "#3364f8";
+        item.style.color = "#8f8989";
         messages2.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
+        rightWindow.scrollTo(0, document.body.scrollHeight);
     });
 
 </script>

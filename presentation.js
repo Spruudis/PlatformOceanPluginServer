@@ -4,9 +4,6 @@ const Path = require("path");
 
 
 const PlatformOceanServer = require("./server");
-const BasePlugIn = require("./Plugin APIs/plug-in_base");
-const UserRoleManagement = require("./plugins/UserRoleManagement/source");
-const MongoDB = require("./plugins/MongoDB/source");
 
 
 async function startServer(){
