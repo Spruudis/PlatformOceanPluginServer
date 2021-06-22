@@ -15,6 +15,7 @@ class EventProxyResponder{
         this.#socket = socket;
         this.#io = io;
         this.#message = message;
+        this.eventProxy = EventProxy.getInstance();
     }
 
     isExternalCall(){
@@ -33,11 +34,10 @@ class EventProxyResponder{
     }
 
 
-    //TODO: IMPORTANT - make this publish an event!!
     //Basic emit. Emits a message to publisher of event, if the publisher is a client and not a plug-in.
-    respondToSender(){
+    respondToSender(eventName, message){
         if(this.#socket != null){
-            this.#socket.emit(...arguments);
+            this.eventProxy.publishAndEmitToClient(eventName, message, this.#socket.id);
         }
     }
 
@@ -148,6 +148,18 @@ class _EventProxy {
     }
 
     /**
+     * Emits a message to a specific client.
+     * @param {string} eventName - Name of the event
+     * @param {*} message - Message
+     * @param {string} socketID - Id of the client connection
+     */
+    emitToClient(eventName, message, socketID){
+        if(this.#io != null){
+            this.#io.to(socketID).emit(eventName, message);
+        }
+    }
+
+    /**
      * Executes each callback subscribed to the event with TODO: the data passed in the event message
      * and emits a message to all connected clients.
      * @param {string} eventName - Name of the event
@@ -156,6 +168,11 @@ class _EventProxy {
     publishAndEmit(eventName, message){
         this.publish(eventName, message);
         this.emit(eventName, message);
+    }
+
+    publishAndEmitToClient(eventName, message, socketID){
+        this.publish(eventName, message);
+        this.emitToClient(eventName, message, socketID);
     }
 
 

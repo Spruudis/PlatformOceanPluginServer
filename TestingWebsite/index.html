@@ -386,7 +386,7 @@
     };
 
 
-    socket.on('message', function(msg) {
+    socket.on('outgoing message', function(msg) {
         addNewMessage({ user: msg.userID, message: msg.message, roles: msg.roles }, messages);
         leftWindow.scrollTop = leftWindow.scrollHeight;
     });

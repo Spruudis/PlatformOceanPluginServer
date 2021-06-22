@@ -7,7 +7,7 @@ class AnonymousMessaging extends BasePlugIn{
     constructor(parentObject) {
         super(parentObject);
         this.eventProxy.subscribe("message", eventProxyResponder => {
-            this.eventProxy.emit("message", eventProxyResponder.eventMessage)
+            this.eventProxy.publishAndEmit("outgoing message", eventProxyResponder.eventMessage)
         })
     }
 }

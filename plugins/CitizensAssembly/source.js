@@ -475,13 +475,13 @@ class CitizensAssembly extends BasePlugIn{
 
                             this.executeHook("getUserRole", userID).then(r =>{
                                 if (r.result === null){
-                                    this.eventProxy.emit('message', {
+                                    this.eventProxy.publishAndEmit("outgoing message", {
                                         message: eventProxyResponder.eventMessage,
                                         userID: userID,
                                         roles: []});
                                     return
                                 }
-                                this.eventProxy.emit('message', {
+                                this.eventProxy.publishAndEmit("outgoing message", {
                                     message: eventProxyResponder.eventMessage,
                                     userID: userID,
                                     roles: r.result});
