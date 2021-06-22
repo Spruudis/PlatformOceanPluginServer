@@ -1,5 +1,8 @@
 const winston = require('winston')
-const BasePlugIn = require("../../Plugin APIs/plug-in_base");
+const path = require('path');
+const basePath = path.join(process.cwd(),"Plugin APIs/plug-in_base")
+const BasePlugIn = require(basePath);
+
 
 dateFormat = () => {
     return new Date(Date.now()).toUTCString()
